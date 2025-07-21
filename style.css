@@ -1,0 +1,418 @@
+/* style.css */
+
+/* Font Import */
+body {
+    font-family: 'Inter', sans-serif;
+    width: auto;
+    height: auto;
+    overflow-x: hidden; /* Ensure no horizontal scroll from responsive elements */
+    overflow-y: auto;
+}
+
+/* Root variables for themes */
+:root {
+    /* Light Mode Colors - Radiant and Pleasant */
+    --bg-primary: #F0F4F8; /* Very light blue-gray, soft background */
+    --bg-secondary: #FFFFFF; /* Pure white for cards/sections */
+    --text-primary: #1E293B; /* Darker slate for main headings/strong text */
+    --text-secondary: #475569; /* Medium slate for body text */
+    --header-bg: rgba(255, 255, 255, 0.98); /* Header background for light mode */
+    --header-shadow: rgba(0, 0, 0, 0.1);
+    --nav-link-color: #64748B; /* Slate-600 for navigation links */
+    --nav-link-hover: #3B82F6; /* Vibrant Blue-600 for hover */
+    --cta-button-light-bg: #E0F2FE; /* Light Blue-100 for light CTA background */
+    --cta-button-light-text: #1D4ED8; /* Deeper Blue-700 for light CTA text */
+    --card-hover-bg: #EBF8FF; /* Very light blue for card hover */
+    --footer-bg: #1F2937; /* Dark Gray-800 for footer */
+    --footer-text: #D1D5DB; /* Light Gray-400 for footer text */
+    --gradient-light-start: #6366F1; /* Indigo-500 */
+    --gradient-light-end: #8B5CF6; /* Purple-500 */
+    --gradient-dark-start: #1E3A8A; /* Dark Blue-800 for dark gradient start */
+    --gradient-dark-end: #111827; /* Gray-900 for dark gradient end */
+    --input-border: #CBD5E0; /* Slate-300 for input borders */
+    --input-focus-ring: #3B82F6; /* Blue-500 for input focus ring */
+}
+
+/* Dark Mode Colors - Radiant and Eye-Catching */
+body.dark-mode {
+    --bg-primary: #121212; /* Deep dark gray, almost black */
+    --bg-secondary: #1E1E1E; /* Slightly lighter dark gray for cards/sections */
+    --text-primary: #E0E0E0; /* Light gray for main headings/strong text */
+    --text-secondary: #B0B0B0; /* Medium gray for body text */
+    --header-bg: rgba(18, 18, 18, 0.95); /* Header background for dark mode */
+    --header-shadow: rgba(0, 0, 0, 0.5); /* Stronger shadow in dark mode */
+    --nav-link-color: #9CA3AF; /* Gray-400 for navigation links */
+    --nav-link-hover: #60A5FA; /* Vibrant Blue-400 for hover */
+    --cta-button-light-bg: #334155; /* Slate-700 for light CTA background */
+    --cta-button-light-text: #E0E0E0; /* Light text for light CTA */
+    --card-hover-bg: #2A2A2A; /* Slightly lighter dark gray for card hover */
+    --footer-bg: #121212; /* Primary dark background for footer */
+    --footer-text: #A0AEC0; /* Gray-400 for footer text */
+    --gradient-light-start: #3730A3; /* Deeper Indigo for light gradient in dark mode */
+    --gradient-light-end: #5B21B6; /* Deeper Purple for light gradient in dark mode */
+    --gradient-dark-start: #0F172A; /* Slate-900 for dark gradient start in dark mode */
+    --gradient-dark-end: #121212; /* Primary dark background for dark gradient end */
+    --input-border: #4A5568; /* Gray-600 for input borders */
+    --input-focus-ring: #60A5FA; /* Blue-400 for input focus ring */
+}
+
+/* Apply variables */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth transition for theme change */
+}
+
+header {
+    background-color: var(--header-bg);
+    box-shadow: 0 4px 6px -1px var(--header-shadow), 0 2px 4px -1px var(--header-shadow);
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
+    z-index: 1000; /* Ensure header is on top */
+    
+    /* Global fixed positioning for header */
+    position: fixed;
+    top: 1rem; /* Spacing from the top */
+    left: 50%; /* Start from the middle */
+    transform: translateX(-50%); /* Pull back by half its width to truly center horizontally */
+    width: calc(100% - 2rem); /* Full width minus 1rem margin on each side */
+    max-width: 1200px; /* Optional: Limit max width for very large screens */
+    border-radius: 0.75rem; /* Subtle rounding for the main header */
+}
+
+/* Specific styling for the navigation container within the header */
+header nav {
+    display: flex;
+    justify-content: space-between; /* Distribute items */
+    align-items: center; /* Vertically align items */
+    width: 100%; /* Ensure nav takes full width of header */
+    height: 100%; /* Ensure nav takes full height of header */
+    padding: 0 1rem; /* Add internal padding to nav, not header */
+}
+
+/* AI Solutions logo styling */
+header nav a.text-2xl {
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-right: auto; /* Push navigation links to the right */
+}
+
+
+.nav-link {
+    color: var(--nav-link-color);
+}
+.nav-link:hover {
+    color: var(--nav-link-hover);
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--nav-link-hover); /* Use hover color for underline */
+    transition: width 0.3s ease-out, left 0.3s ease-out;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.section-gradient-light {
+    background: linear-gradient(to right, var(--gradient-light-start), var(--gradient-light-end));
+    color: white; /* Text on light gradient is always white */
+}
+
+.section-gradient-dark {
+    background: linear-gradient(to right, var(--gradient-dark-start), var(--gradient-dark-end));
+    color: white; /* Text on dark gradient is always white */
+}
+
+/* Overrides for elements that use specific Tailwind colors directly */
+/* These ensure Tailwind classes map to our custom properties for consistent theming */
+.bg-white {
+    background-color: var(--bg-secondary);
+}
+
+.text-gray-800 {
+    color: var(--text-primary);
+}
+
+.text-gray-600 {
+    color: var(--text-secondary);
+}
+
+/* Specific override for the "Learn More About Us" CTA button which uses bg-gray-800 */
+.cta-button.bg-gray-800 {
+    background-color: var(--text-primary); /* Use primary text color for background */
+    color: var(--bg-primary); /* Use primary background color for text */
+}
+.cta-button.bg-gray-800:hover {
+    background-color: var(--text-secondary); /* Slightly lighter primary text color on hover */
+}
+
+/* General CTA button styling */
+.cta-button {
+    transition: all 0.3s ease-in-out;
+}
+
+.feature-card, .solution-card {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.3s ease-in-out; /* Smooth transition for all transforms */
+    transform-style: preserve-3d; /* Crucial for 3D effects on children */
+}
+
+.feature-card:hover, .solution-card:hover {
+    /* JS will handle the transform, but keep background/shadow changes here */
+    background-color: var(--card-hover-bg);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Increased shadow */
+}
+
+/* Text inside feature/solution cards */
+.feature-card h3, .solution-card h3 {
+    color: var(--text-primary);
+}
+.feature-card p, .solution-card p {
+    color: var(--text-secondary);
+}
+
+
+footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+footer a {
+    color: var(--footer-text);
+}
+footer a:hover {
+    color: var(--text-primary); /* Lighter text on hover */
+}
+
+/* Form input styling */
+input, textarea {
+    border-color: var(--input-border);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: border-color 0.5s ease, background-color 0.5s ease, color 0.5s ease;
+}
+input:focus, textarea:focus {
+    border-color: var(--input-focus-ring);
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 0 3px var(--input-focus-ring); /* Use variable for focus ring color */
+}
+
+/* Hero Video Overlay - adjust for dark mode */
+.hero-video {
+    filter: brightness(0.7);
+    transition: filter 0.5s ease;
+}
+body.dark-mode .hero-video {
+    filter: brightness(0.4); /* Make video darker in dark mode for better contrast with light text */
+}
+
+/* Radial gradient overlay - ensure it works well in both modes */
+.bg-gradient-radial {
+    background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+}
+body.dark-mode .bg-gradient-radial {
+    background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+}
+
+
+/* Scroll-triggered Animations */
+/* Base state (hidden) */
+.animate-fade-in {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.animate-slide-up {
+    transform: translateY(20px);
+    transition: transform 0.8s ease-out;
+}
+
+/* Visible state (when 'animated' class is added by JS) */
+.animate-fade-in.animated {
+    opacity: 1;
+}
+
+.animate-slide-up.animated {
+    transform: translateY(0);
+}
+
+/* Keyframe animations for initial load (optional, but good for hero) */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Apply initial animations to hero section elements */
+.hero-section-title.animate-fade-in,
+.hero-section-text.animate-fade-in,
+.hero-section-button.animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.hero-section-title.animate-slide-up,
+.hero-section-text.animate-slide-up,
+.hero-section-button.animate-fade-in {
+    animation: slideUp 1s ease-out forwards;
+}
+
+/* Page Load Animation (removed from body, but keeping definition in case it's re-added to specific elements) */
+@keyframes pageFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Navigation Specifics */
+/* Initial state for mobile menu container */
+#nav-links-container {
+    max-height: 0; /* Start collapsed */
+    opacity: 0; /* Start fully transparent */
+    overflow: hidden; /* Hide content that overflows max-height */
+    pointer-events: none; /* Prevent interaction when hidden */
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; /* Smooth transition for max-height and opacity */
+    
+    /* These properties ensure it's always 'flex' for layout calculations,
+       but visually controlled by max-height/opacity */
+    display: flex;
+    flex-direction: column;
+    
+    position: absolute; /* Ensure it overlays content */
+    top: 100%; /* Position right below the header */
+    left: 0;
+    width: 100%;
+    background-color: var(--header-bg); /* Use header background for consistency */
+    box-shadow: 0 8px 16px -2px var(--header-shadow); /* Stronger shadow for dropdown */
+    padding-bottom: 1rem; /* Add some padding at the bottom */
+    border-top: 1px solid var(--input-border); /* A subtle separator */
+    z-index: 998; /* Ensure it's above other content but below the header's fixed z-index (1000) */
+
+    /* Added for rounded corners on the mobile dropdown */
+    border-bottom-left-radius: 1rem; /* Adjust as desired */
+    border-bottom-right-radius: 1rem; /* Adjust as desired */
+}
+
+/* Active state for mobile menu container */
+#nav-links-container.active {
+    max-height: 300px; /* A value large enough to show all links when open */
+    opacity: 1; /* Fully opaque when active */
+    pointer-events: auto; /* Allow interaction when active */
+}
+
+/* Adjust nav-link padding for mobile vertical menu */
+#nav-links-container.active .nav-link {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%; /* Make links take full width */
+    text-align: center; /* Center text in mobile menu */
+}
+
+/* Ensure theme toggle button is always visible and correctly positioned on mobile */
+header nav {
+    position: relative; /* Ensure positioning context for absolute menu */
+}
+
+/* Adjust order of elements in header for mobile */
+@media (max-width: 767px) {
+    header {
+        /* On mobile, the header should be a simple full-width bar */
+        border-radius: 0; /* Ensure no rounding on the main header bar */
+        max-width: 100%;
+        left: 0;
+        transform: none;
+        top: 0;
+        width: 100%;
+        right: 0;
+    }
+
+    header nav {
+        justify-content: space-between; /* Distribute items */
+        align-items: center;
+    }
+    header nav > a { /* AI Solutions logo */
+        order: 0;
+    }
+    #mobile-menu-toggle {
+        display: flex; /* Ensure it's always flex on mobile */
+        align-items: center; /* Center icon vertically */
+        justify-content: center; /* Center icon horizontally */
+        background-color: var(--cta-button-light-bg); /* Use a more distinct color from theme variables */
+        color: var(--cta-button-light-text); /* Ensure text/icon color is distinct */
+        border: 1px solid var(--nav-link-hover); /* Add a border for more visibility */
+        order: 1;
+        margin-right: 0.5rem; /* Space between toggle and theme button */
+    }
+    #theme-toggle {
+        order: 2;
+        margin-left: 0; /* Remove auto margin from desktop */
+    }
+}
+
+/* Corrected media query for desktop navigation display */
+@media (min-width: 768px) {
+    #nav-links-container {
+        /* On desktop, this container holds the main nav links and should be centered */
+        display: flex; /* Always flex on desktop */
+        max-height: none; /* No max-height constraint */
+        opacity: 1; /* Fully visible */
+        pointer-events: auto; /* Allow interaction */
+        position: static; /* Remove absolute positioning */
+        box-shadow: none; /* Remove shadow */
+        border-top: none; /* Remove border */
+        padding-bottom: 0; /* Remove padding */
+        flex-direction: row; /* Ensure horizontal layout on desktop */
+        align-items: center; /* Vertically align items */
+        width: auto; /* Allow content to dictate width */
+        border-radius: 0.75rem; /* Apply rounding to this specific container */
+        background-color: var(--header-bg); /* Apply header background to this container */
+        padding: 0.5rem 1.5rem; /* Add padding to the rounded nav container */
+        margin-left: auto; /* Push it to the right of the logo */
+        margin-right: auto; /* Help center it if flex-grow is not used on ul */
+    }
+
+    header {
+        /* Desktop header styling - now primarily a container for its children */
+        border-radius: 0; /* Header itself is no longer rounded */
+        max-width: 100%; /* Full width */
+        left: 0;
+        transform: none;
+        top: 0;
+        width: 100%;
+        right: 0;
+        background-color: transparent; /* Make header background transparent */
+        box-shadow: none; /* Remove shadow from header itself */
+        padding: 1rem 0; /* Add top/bottom padding to header to create space around the floating nav */
+    }
+
+    header nav {
+        justify-content: space-between; /* Space out logo and nav links */
+        align-items: center;
+        width: 100%;
+        height: auto;
+        padding: 0 1rem; /* Internal padding for the nav container */
+    }
+
+    header nav a.text-2xl { /* AI Solutions logo */
+        margin-right: 2rem; /* Add space between logo and nav links */
+    }
+
+    header nav ul { /* The actual list of nav links */
+        flex-grow: 1; /* Allow the ul to take available space */
+        justify-content: center; /* Center the links within their container */
+    }
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Login / Sign Up</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the frosted glass effect and gradients */
+        .frosted-glass-card {
+            background: rgba(255, 255, 255, 0.08); /* Darker, more subtle transparency */
+            backdrop-filter: blur(15px) saturate(180%); /* Stronger blur */
+            -webkit-backdrop-filter: blur(15px) saturate(180%); /* For Safari */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Lighter, more subtle border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45); /* More pronounced shadow */
+            position: relative; /* For z-index to place it above background blobs */
+            z-index: 20; /* Ensure card is above background animations */
+        }
+        .button-gradient {
+            background: linear-gradient(to right, #8a2be2, #ff007f); /* Vibrant purple to pink gradient */
+            transition: all 0.3s ease;
+        }
+        .button-gradient:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); /* Glowing effect on hover */
+            transform: translateY(-2px);
+        }
+        .input-icon {
+            color: #b0b0b0; /* Slightly darker gray for icons */
+        }
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font */
+            background: linear-gradient(135deg, #1a0033, #000000); /* Darker, richer background gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden; /* Hide overflow from background animations */
+            position: relative; /* For positioning background blobs */
+        }
+
+        /* Responsive adjustments for the card width */
+        .main-card-container {
+            width: 90%;
+            max-width: 420px; /* Slightly wider max-width */
+            animation: fadeInScale 0.7s ease-out forwards;
+        }
+        @media (min-width: 640px) {
+            .main-card-container {
+                width: 70%;
+            }
+        }
+        @media (min-width: 768px) {
+            .main-card-container {
+                width: 50%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .main-card-container {
+                width: 420px;
+            }
+        }
+
+        /* Animation for initial card load */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Styles for form content transitions */
+        .form-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; /* Slightly longer transition */
+            display: none;
+        }
+
+        .form-content.active-form {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        /* Unique Input Field Styling */
+        .unique-input-group {
+            position: relative;
+            margin-bottom: 1.5rem; /* Adjust spacing */
+        }
+        .unique-input {
+            background: rgba(255, 255, 255, 0.05); /* Very subtle background */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+            border-radius: 8px; /* Rounded corners for inputs */
+            padding: 12px 15px 12px 45px; /* Padding for icon and text */
+            width: 100%;
+            color: #e0e0e0; /* Lighter text color */
+            transition: all 0.3s ease;
+            outline: none; /* Remove default outline */
+        }
+        .unique-input:focus {
+            border-color: #ff007f; /* Pink glow on focus */
+            box-shadow: 0 0 0 2px rgba(255, 0, 127, 0.3); /* Subtle outer glow */
+            background: rgba(255, 255, 255, 0.1); /* Slightly more visible on focus */
+        }
+        .unique-input::placeholder {
+            color: #a0a0a0; /* Placeholder color */
+        }
+        /* Ensure text is clearly visible white within active form inputs */
+        .form-content.active-form .unique-input {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15); /* Slightly more opaque background when active */
+        }
+        /* Ensure all text within the active form is white for better contrast */
+        .form-content.active-form {
+            color: #ffffff;
+        }
+        .form-content.active-form h2 {
+            color: #ffffff; /* Ensure heading is white */
+        }
+        .form-content.active-form p {
+            color: #e0e0e0; /* Slightly off-white for paragraph text */
+        }
+        .form-content.active-form a {
+            color: #ff007f; /* Ensure links are readable */
+        }
+
+
+        .unique-input-group .lucide {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b0b0b0;
+            pointer-events: none; /* Ensure icon doesn't block input clicks */
+        }
+
+        /* Background Animation Blobs */
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* Strong blur */
+            opacity: 0.6;
+            z-index: 10; /* Behind the card */
+            animation: blob-animation 15s infinite alternate ease-in-out;
+        }
+        .blob-1 {
+            width: 200px; height: 200px;
+            background: #8a2be2; /* Blue-violet */
+            top: 10%; left: 5%;
+            animation-delay: 0s;
+        }
+        .blob-2 {
+            width: 250px; height: 250px;
+            background: #ff007f; /* Electric pink */
+            bottom: 15%; right: 10%;
+            animation-delay: 5s;
+        }
+        .blob-3 {
+            width: 180px; height: 180px;
+            background: #00ffff; /* Cyan */
+            top: 30%; right: 20%;
+            animation-delay: 10s;
+        }
+        .blob-4 {
+            width: 220px; height: 220px;
+            background: #6a5acd; /* Slate blue */
+            bottom: 5%; left: 25%;
+            animation-delay: 3s;
+        }
+
+        @keyframes blob-animation {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translate(20px, -30px) scale(1.05);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translate(-10px, 40px) scale(0.95);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translate(30px, -10px) scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.6;
+            }
+        }
+        /* Style for error message */
+        .error-message {
+            color: #ff6b6b; /* Reddish color for errors */
+            font-size: 0.875rem; /* Small text */
+            margin-top: -1rem; /* Pull it up closer to the inputs */
+            margin-bottom: 1rem; /* Add space below it */
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .error-message.show {
+            opacity: 1;
+        }
+        /* Style for success message */
+        .success-message {
+            color: #6bff9b; /* Greenish color for success */
+            font-size: 0.875rem;
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .success-message.show {
+            opacity: 1;
+        }
+
+        /* Responsive H2 font size */
+        @media (max-width: 480px) {
+            .main-card-container h2 {
+                font-size: 2rem; /* Smaller font size for very small screens */
+            }
+        }
+    </style>
+    <!-- Lucide Icons CDN for email, lock, and user icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased">
+    <!-- Background Animated Blobs -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <div class="bg-blob blob-4"></div>
+
+    <div class="main-card-container p-8 rounded-2xl frosted-glass-card text-white shadow-lg">
+        <!-- User Icon Placeholder (common for both forms) -->
+        <div class="flex justify-center mb-8">
+            <div class="w-28 h-28 bg-gray-700 bg-opacity-40 rounded-full flex items-center justify-center border border-gray-600 shadow-inner">
+                <!-- Simple SVG for user icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user text-gray-300">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="form-content active-form">
+            <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">Welcome Back!</h2>
+
+            <!-- Email ID Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
+                    <rect width="20" height="16" x="2" y="4" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <input type="email" id="loginEmail" placeholder="Email ID" class="unique-input" aria-label="Login Email ID">
+            </div>
+
+            <!-- Password Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="loginPassword" placeholder="Password" class="unique-input" aria-label="Login Password">
+            </div>
+
+            <!-- Error Message Display for Login -->
+            <p id="loginErrorMessage" class="error-message">
+                Invalid email or password.
+            </p>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between mb-8 text-sm">
+                <label class="flex items-center text-gray-400 cursor-pointer">
+                    <input type="checkbox" class="form-checkbox h-4 w-4 text-pink-500 rounded border-gray-500 focus:ring-pink-400 mr-2 bg-transparent">
+                    Remember me
+                </label>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" id="loginButton" class="w-full button-gradient text-white font-bold py-3 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                LOGIN
+            </button>
+
+            <p class="text-center text-gray-400 mt-8 text-sm">
+                Don't have an account? <a href="#" id="showSignup" class="text-pink-400 hover:underline font-semibold">Sign Up</a>
+            </p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signupForm" class="form-content">
+            <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">Join Us!</h2>
+
+            <!-- Username Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input type="text" id="signupUsername" placeholder="Username" class="unique-input" aria-label="Sign Up Username">
+            </div>
+
+            <!-- Email ID Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
+                    <rect width="20" height="16" x="2" y="4" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <input type="email" id="signupEmail" placeholder="Email ID" class="unique-input" aria-label="Sign Up Email ID">
+            </div>
+
+            <!-- Password Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="signupPassword" placeholder="Password" class="unique-input" aria-label="Sign Up Password">
+            </div>
+
+            <!-- Confirm Password Input -->
+            <div class="unique-input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" class="unique-input" aria-label="Confirm Password">
+            </div>
+
+            <!-- Error Message Display for Sign Up -->
+            <p id="signupErrorMessage" class="error-message">
+                Please fill all fields and ensure passwords match.
+            </p>
+            <!-- Success Message Display for Sign Up -->
+            <p id="signupSuccessMessage" class="success-message">
+                Sign up successful! Redirecting...
+            </p>
+
+            <!-- Sign Up Button -->
+            <button type="submit" id="signupButton" class="w-full button-gradient text-white font-bold py-3 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                SIGN UP
+            </button>
+
+            <p class="text-center text-gray-400 mt-8 text-sm">
+                Already have an account? <a href="#" id="showLogin" class="text-pink-400 hover:underline font-semibold">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const showSignupLink = document.getElementById('showSignup');
+            const showLoginLink = document.getElementById('showLogin');
+
+            // Login form elements
+            const loginButton = document.getElementById('loginButton');
+            const loginEmailInput = document.getElementById('loginEmail');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+
+            // Signup form elements
+            const signupButton = document.getElementById('signupButton');
+            const signupUsernameInput = document.getElementById('signupUsername');
+            const signupEmailInput = document.getElementById('signupEmail');
+            const signupPasswordInput = document.getElementById('signupPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const signupErrorMessage = document.getElementById('signupErrorMessage');
+            const signupSuccessMessage = document.getElementById('signupSuccessMessage');
+
+            // Define a placeholder password for login demonstration
+            const CORRECT_LOGIN_PASSWORD = 'password123';
+
+            /**
+             * Shows the specified form with a transition and hides the other form.
+             * @param {HTMLElement} formToShow - The form element to display.
+             * @param {HTMLElement} formToHide - The form element to hide.
+             */
+            function showForm(formToShow, formToHide) {
+                console.log('showForm called:', { formToShowId: formToShow.id, formToHideId: formToHide.id });
+
+                // Hide any existing error/success messages when switching forms
+                loginErrorMessage.classList.remove('show');
+                signupErrorMessage.classList.remove('show');
+                signupSuccessMessage.classList.remove('show');
+
+                // 1. Start fading out and sliding down the current form
+                formToHide.classList.remove('active-form');
+
+                // 2. After the transition duration, hide it completely and prepare the new form
+                // The timeout duration should match the CSS transition duration for .form-content
+                setTimeout(() => {
+                    formToHide.style.display = 'none'; // Hide completely after transition
+                    console.log(`${formToHide.id} display set to none.`);
+
+                    // 3. Prepare the new form for its entrance animation
+                    formToShow.style.opacity = '0';
+                    formToShow.style.transform = 'translateY(20px)';
+                    formToShow.style.display = 'block'; // Make it visible for the transition
+                    console.log(`${formToShow.id} display set to block, preparing for transition.`);
+
+                    // 4. Trigger reflow to ensure `display: block` is applied before the transition starts.
+                    // This is crucial for the CSS transition to play correctly from the initial hidden state.
+                    formToShow.offsetHeight; // Triggers reflow
+                    console.log('Reflow triggered.');
+
+                    // 5. Start fading in and sliding up the new form
+                    formToShow.classList.add('active-form'); // This class applies opacity:1 and transform:translateY(0)
+                    console.log(`${formToShow.id} active-form class added.`);
+                }, 600); // This delay should match the CSS transition duration (0.6s)
+            }
+
+            // Event listener for showing the Sign Up form
+            showSignupLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                console.log('Sign Up link clicked.');
+                showForm(signupForm, loginForm);
+            });
+
+            // Event listener for showing the Login form
+            showLoginLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                console.log('Login link clicked.');
+                showForm(loginForm, signupForm);
+            });
+
+            // Event listener for the Login button
+            loginButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default form submission
+
+                const email = loginEmailInput.value;
+                const password = loginPasswordInput.value;
+
+                // Hide previous error message
+                loginErrorMessage.classList.remove('show');
+
+                // Check if the email is a Gmail address AND the password is correct
+                if (email.endsWith('@gmail.com') && password === CORRECT_LOGIN_PASSWORD) {
+                    // Set a flag in localStorage to indicate the user is logged in
+                    localStorage.setItem('isLoggedIn', 'true');
+                    // Redirect to index.html if both conditions are met
+                    window.location.href = 'index.html'; // Updated path
+                } else {
+                    // Display error message if conditions are not met
+                    loginErrorMessage.textContent = 'Invalid Gmail address or password.';
+                    loginErrorMessage.classList.add('show');
+                    console.log('Login failed: Invalid Gmail address or password.');
+                }
+            });
+
+            // Event listener for the Sign Up button
+            signupButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default form submission
+
+                const username = signupUsernameInput.value.trim();
+                const email = signupEmailInput.value.trim();
+                const password = signupPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                // Hide previous error/success messages
+                signupErrorMessage.classList.remove('show');
+                signupSuccessMessage.classList.remove('show');
+
+                if (!username || !email || !password || !confirmPassword) {
+                    signupErrorMessage.textContent = 'Please fill in all fields.';
+                    signupErrorMessage.classList.add('show');
+                } else if (!email.includes('@')) { // Basic email format check
+                    signupErrorMessage.textContent = 'Please enter a valid email address.';
+                    signupErrorMessage.classList.add('show');
+                } else if (password.length < 6) { // Minimum password length
+                    signupErrorMessage.textContent = 'Password must be at least 6 characters long.';
+                    signupErrorMessage.classList.add('show');
+                } else if (password !== confirmPassword) {
+                    signupErrorMessage.textContent = 'Passwords do not match.';
+                    signupErrorMessage.classList.add('show');
+                } else {
+                    // Simulate successful sign-up
+                    signupSuccessMessage.textContent = 'Sign up successful! Redirecting...';
+                    signupSuccessMessage.classList.add('show');
+                    console.log('Sign up successful:', { username, email });
+
+                    // Set a flag in localStorage to indicate the user is logged in after signup
+                    localStorage.setItem('isLoggedIn', 'true');
+
+                    // Redirect to index.html after a short delay to show success message
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Updated path
+                    }, 1500); // Redirect after 1.5 seconds
+                }
+            });
+        });
+    </script>
+</body>
+</html>
